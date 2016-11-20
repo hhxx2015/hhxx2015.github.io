@@ -1,23 +1,23 @@
 # Site settings
-email: 
-baseurl: ""
+email:zhenyuan_hao@163.com
+baseurl: "haohhxx.github.io"
 paginate: 5
 paginate_path: "/blog/page-:num"
-google_analytics: 
+google_analytics:
 
 # SEO settings
-title: Trophy
-description: 
-url: ""
-twitter_username: 
-default_img: 
+title: haohhxx
+description: 学习笔记
+url: "haohhxx.github.io"
+twitter_username:
+default_img:
 
 # Profile settings
-name: 
-profile_img: 
-profile: 
+name:
+profile_img:
+profile:
 social:
-  github: 
+  github:
 
 # Build settings
 include: ["_categories"]
