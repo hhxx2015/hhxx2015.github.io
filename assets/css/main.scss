@@ -1,12 +1,15 @@
 ---
+# Only the main Sass file needs front matter (the dashes are enough)
 ---
+@charset "utf-8";
 
+
+// Import partials from `sass_dir` (defaults to `assets/_sass`)
 @import
-  'base',
-  'mixins',
-  'extends',
-  'layout',
-  'components',
-  'animations',
-  'helpers'
+  "normalize",
+  "variables",
+  "base",
+  "layout",
+  "media-queries",
+  "syntax-highlighting"
 ;
