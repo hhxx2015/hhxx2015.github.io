@@ -1,12 +1,12 @@
 ---
 bg: "tools.jpg"
 layout: post
-title:  "一个python启动器脚本"
-crawlertitle: "python"
-summary: "在服务器上维护jar包的脚本"
+title:  "使用Quartz定实现java任务调度"
+crawlertitle: "使用Quartz定实现java任务调度"
+summary: "使用Quartz定实现java任务调度"
 date:   2017-5-1 12:55:29 +0800
 categories: posts
-tags: ['python']
+tags: ['java']
 author: haohhxx
 ---
 
