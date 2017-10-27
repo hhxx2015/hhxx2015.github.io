@@ -2,7 +2,7 @@
 bg: "64495434_p0.jpg"
 layout: page
 title: "About"
-crawlertitle: "haohhxx 郝振元 个人博客haohhxx"
+crawlertitle: "haohhxx 郝振元 个人博客"
 permalink: /about/
 summary: "About this blog"
 active: about
