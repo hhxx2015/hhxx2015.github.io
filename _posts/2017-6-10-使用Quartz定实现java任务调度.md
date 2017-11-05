@@ -10,73 +10,61 @@ tags: ['java']
 author: haohhxx
 ---
 
-在服务器上维护jar包的一段程序
+直接在Quartz官网上找到的例子。使用的时候继承Quartz的Job类，实现其execute方法。
+JobDataMap用于传递任务执行所需的参数。
 
+```xml
+<!-- quartz 的jar -->
+<dependency>
+    <groupId>org.quartz-scheduler</groupId>
+    <artifactId>quartz</artifactId>
+    <version>2.2.1</version>
+</dependency>
+<dependency>
+    <groupId>org.quartz-scheduler</groupId>
+    <artifactId>quartz-jobs</artifactId>
+    <version>2.2.1</version>
+</dependency>
+```
 
-```python
-#!/usr/bin/env python
-# -*- coding:utf-8 -*-
+```java
+import org.haohhxx.hotevent.HotEventTask.taskentity.Product;
+import org.quartz.*;
 
-import os
-import sys
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
-JAVA_HOME = '/data/nlp_ngram2vec/envir/jdk1.8.0_144'
-JAR_NAME = '/usr/local/service/nlp_hotevent_taskall/task/HotEventTask-1.2.6-jdk1.8.jar'
-product_cron = '/usr/local/service/nlp_hotevent_taskall/task/product_cron_config.xml'
-print_log = '/usr/local/service/nlp_hotevent_taskall/task/log/printlog/print.out.txt'
-max_memory = '6g'
+/**
+ * Created by Administrator on 2017/7/18.
+ * 在线cron表达式生成工具 http://cron.qqe2.com/
+ */
+public class QuartzScheduling {
 
+    public void executeTask(Product product, Class<? extends Job> executeJob)throws SchedulerException {
 
-def start():
-    runcmd = "nohup {}/bin/java -jar -Xms512m -Xmx{} {} {} >> {} 2>&1 &"\
-        .format(JAVA_HOME, max_memory, JAR_NAME, product_cron, print_log)
-    os.system(runcmd)
+        SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
+        Scheduler sched = schedFact.getScheduler();
+        sched.start();
 
-    print(runcmd)
-    pass
+        JobDataMap jobmess = new JobDataMap();
+        jobmess.put("product",product);
+        JobDetail job = newJob(executeJob)
+                .withIdentity("Job:"+product.getEventId(), "group_"+product.getEventId())
+                .setJobData(jobmess)
+                .build();
 
+        // Trigger the src.job to run now, and then every 40 seconds
+        Trigger trigger = newTrigger()
+                .withIdentity("Trigger:"+product.getEventId(), "group_"+product.getEventId())
+                .startNow()
+                .withSchedule(cronSchedule(product.getCronTime()))
+                .build();
 
-def kill(taskname):
-    this_pid = str(os.getpid())
-    print("this_pid:" + this_pid)
-    lines = os.popen(taskname).readlines()
-    lines = map(lambda line: str(line.strip()).split(' ')[0], lines)
-    lines = filter(lambda line: line != ('' or this_pid), lines)
-    for pid in lines:
-        os.system("kill -9 %s" % pid)
-        print("hotevent task stop...pid = %s" % pid)
-    else:
-        print("task stop...")
-        print('no pid found.')
-    pass
+        // Tell quartz to schedule the src.job using our trigger
+        sched.scheduleJob(job, trigger);
+    }
 
-
-def stop():
-    kill("ps -g|grep hotevent_task.py")
-    kill("jps -l|grep HotEventTask")
-    pass
-
-
-def restart():
-    stop()
-    start()
-
-
-if __name__ == '__main__':
-    print('--------------------------------------------------------------------------------------')
-    print('JAVA_HOME = ' + JAVA_HOME)
-    print('JAR_NAME = ' + JAR_NAME)
-    print('product_cron = ' + product_cron)
-    print('--------------------------------------------------------------------------------------')
-
-    arg = sys.argv[1]
-    if arg == 'start':
-        start()
-    elif arg == 'stop':
-        stop()
-    elif arg == 'restart':
-        restart()
-    else:
-        print('undefined option found : ' + arg)
+}
 
 ```
