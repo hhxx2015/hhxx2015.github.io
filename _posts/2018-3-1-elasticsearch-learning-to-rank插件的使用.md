@@ -21,11 +21,11 @@ author: haohhxx
 -------------
 首先是特征集合的构建。
 在esltr中，通过在es中查询产生各种feature。
-这里我采用了yaml格式配置在esltr中产生feature的Query DSL，内容如下：
+此处采用了yaml文件描述在esltr中产生feature的Query DSL，内容如下：
 
 ```yaml
 featureset:
-  name: name
+  name: name #本组特征集合的名称
   features:
   - name: 1_english_score  #首先是一个特征的名字，可以自行定义
     params: []
@@ -50,64 +50,31 @@ featureset:
   - name: 4_pr_score
     params: []
     template:
-      function_score: #
+      function_score: #得到事先已经记录在索引中的值pagerank作为第四个特征
         query:
           match_all: {}
         script_score:
           script: {source: 'doc[''pagerank''].value'}
 
-  - name: 5_years_score
-    params: []
-    template:
-      function_score:
-        query:
-          match_all: {}
-        script_score:
-          script: {source: 'doc[''years''].value'}
+```
+以上是几种简单的特征产生方法。
+官方文档中还有其他构建方法，包括自定义特征计算公式、语言模型查询得分等。
+详见 http://elasticsearch-learning-to-rank.readthedocs.io/en/latest/
 
-  - name: 6_jump_score
-    params: []
-    template:
-      function_score:
-        query:
-          match_all: {}
-        script_score:
-          script: {source: 'doc[''jumpFrequent''].value'}
 
-  - name: 7_oversea
-    params: []
-    template:
-      function_score:
-        query:
-          match_all: {}
-        script_score:
-          script: {source: 'doc[''isOverSea''].value'}
+以上yaml生成dsl后直接post提交给elasticsearch，python代码如下
+```python
+import requests
+import json
+import yaml
 
-  - name: 8_salary
-    params: []
-    template:
-      function_score:
-        query:
-          match_all: {}
-        script_score:
-          script: {source: 'doc[''salary''].value'}
+with open(feature_yaml_path, 'r', encoding='utf-8') as feature_set_file:
+    feature_set = yaml.load(feature_set_file)
+resp = requests.put("http://localhost:9200/_ltr")
 
-  - name: 9_exp_length
-    params: []
-    template:
-      function_score:
-        query:
-          match_all: {}
-        script_score:
-          script: {source: 'doc[''workExpLength''].value'}
 
-  - name: 10_resume_length
-    params: []
-    template:
-      function_score:
-        query:
-          match_all: {}
-        script_score:
-          script: {source: 'doc[''resumeLength''].value'}
 
 ```
+
+
+
