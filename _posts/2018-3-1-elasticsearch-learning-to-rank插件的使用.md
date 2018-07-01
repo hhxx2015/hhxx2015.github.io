@@ -57,6 +57,10 @@ featureset:
           script: {source: 'doc[''pagerank''].value'}
 
 ```
+import yaml
+
+with open(feature_yaml_path, 'r', encoding='utf-8') as feature_set_file:
+    feature_set = yaml.load(feature_set_file)
 以上是几种简单的特征产生方法。
 官方文档中还有其他构建方法，包括自定义特征计算公式、语言模型查询得分等。
 详见 http://elasticsearch-learning-to-rank.readthedocs.io/en/latest/
@@ -66,10 +70,6 @@ featureset:
 ```python
 import requests
 import json
-import yaml
-
-with open(feature_yaml_path, 'r', encoding='utf-8') as feature_set_file:
-    feature_set = yaml.load(feature_set_file)
 resp = requests.put("http://localhost:9200/_ltr")
 
 
