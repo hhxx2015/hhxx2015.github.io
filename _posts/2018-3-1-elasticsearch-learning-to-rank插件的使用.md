@@ -17,8 +17,8 @@ author: haohhxx
 
 
 
-特征集合构建
--------------
+特征集合
+-----------
 首先是特征集合的构建。
 在esltr中，通过在es中查询产生各种feature。
 此处采用了yaml文件描述在esltr中产生feature的Query DSL，内容如下：
@@ -67,14 +67,22 @@ with open(feature_yaml_path, 'r', encoding='utf-8') as feature_set_file:
 
 
 以上yaml生成dsl后直接post提交给elasticsearch，python代码如下
-```python
+
+```python3
 import requests
 import json
 resp = requests.put("http://localhost:9200/_ltr")
+head = {'Content-Type': 'application/json'}
+full_path = "http://localhost:9200/_ltr/_featureset/%s" % feature_set_name
+url = "" + full_path
 
-
-
+resp = requests.post(url=url, data=json.dumps(feature_set), headers=head)
+print("post %s" % resp.status_code)
 ```
+
+构建训练数据集合
+---------------
+
 
 
 
